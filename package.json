@@ -1,0 +1,30 @@
+{
+  "name": "components-playground",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@danproudfeet/react-scripts": "3.2.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start:dash": "webpack-dashboard -- react-scripts start",
+    "build": "react-scripts build",
+    "build:analyze": "react-scripts build --analyze",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
+  }
+}
