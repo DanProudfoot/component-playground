@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { HashRouter, Route, Link } from 'react-router-dom';
 
 import style from './app.module.scss';
 import Voice from 'components/structure/Voice';
@@ -19,7 +19,7 @@ const basename = window.location.href.includes('localhost')
 export default class App extends Component {
 	render() {
 		return (
-			<BrowserRouter basename={basename}>
+			<HashRouter hashType="noslash" basename={basename}>
 				<div className={style.app}>
 					{list.map(item => (
 						<Route
@@ -31,7 +31,7 @@ export default class App extends Component {
 
 					<Route exact path="/" component={Linkies} />
 				</div>
-			</BrowserRouter>
+			</HashRouter>
 		);
 	}
 }

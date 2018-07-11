@@ -5,26 +5,23 @@ import Typed from 'typed.js';
 import style from './voice.module.scss';
 import particles from 'assets/videos/particles.mp4';
 
-import microservice_img from 'assets/images/microservice.png';
-
 const terms = [
 	{
 		name: 'isolated microservices',
 		text:
 			'<span className="mid">ISOLATED</span> <br/> <span className="big">MICROSERVICES?</span>',
-		image: microservice_img,
+
 		info:
 			'The task of transforming monolithic mainframe applications into Microservices can be daunting unless they can be containerized, delivered and deployed using a modern DevOps Toolchain. '
+	},
+	{
+		name: 'realtime analytics',
+		text:
+			'<span className="mid">REAL TIME</span> <br/> <span className="big">ANALYTICS?</span>',
+
+		info:
+			'Using a database such as PostgreSQL to store updates, an organization can benefit from a plethora of tools which put critical information into the hands of key decision makers at the same speed as other source data. '
 	}
-
-	// {
-	// 	name: 'banana',
-	// 	text: '<span className="big">BANANA</span>',
-
-	// 	image: banana_img,
-	// 	info:
-	// 		'A banana is an edible fruit – botanically a berry – produced by several kinds of large herbaceous flowering plants in the genus Musa. In some countries, bananas used for cooking may be called plantains, distinguishing them from dessert bananas.'
-	// }
 ];
 
 const getSelected = name => terms.filter(term => term.name === name)[0];
@@ -35,7 +32,6 @@ const grammar = `#JSGF V1.0; grammar terms; public <color> = ${terms
 
 export default class Voice extends Component {
 	state = {
-		captured: 'Listening...',
 		started: false,
 		selected: null
 	};
@@ -61,7 +57,6 @@ export default class Voice extends Component {
 			this.recognition.grammars = speechRecognitionList;
 
 			this.recognition.onresult = this.recognitionResult;
-			// this.recognition.onspeechend = this.speechEnd;
 
 			this.recognition.onnomatch = () => {
 				console.log('No match found');
@@ -74,6 +69,35 @@ export default class Voice extends Component {
 
 			this.recognition.start();
 			this.setState({ started: true });
+		}
+	}
+
+	componentDidUpdate() {
+		const { selected } = this.state;
+
+		if (selected) {
+			if (this.timeout) clearTimeout(this.timeout);
+			if (this.title) this.title.destroy();
+			if (this.paragraph) this.paragraph.destroy();
+
+			const optionsTitle = { strings: [selected.text], typeSpeed: 5 };
+			const optionsParagraph = {
+				strings: [selected.info],
+				typeSpeed: 10,
+				onComplete: () => {
+					this.timeout = setTimeout(() => {
+						if (this.title) this.title.destroy();
+						if (this.paragraph) this.paragraph.destroy();
+						this.setState({ selected: null });
+					}, 3000);
+				}
+			};
+
+			this.title = new Typed(this.ref.title.current, optionsTitle);
+			this.paragraph = new Typed(
+				this.ref.paragraph.current,
+				optionsParagraph
+			);
 		}
 	}
 
@@ -96,38 +120,13 @@ export default class Voice extends Component {
 			console.log(filtered);
 
 			const selected = getSelected(filtered[0]);
-
-			this.setState({
-				selected
-			});
-
 			console.log(selected);
 
 			if (selected) {
-				const options1 = { strings: [selected.text], typeSpeed: 5 };
-				const options2 = { strings: [selected.info], typeSpeed: 10 };
-
-				new Typed(this.ref.title.current, options1);
-				new Typed(this.ref.paragraph.current, options2);
+				this.setState({
+					selected
+				});
 			}
-		}
-	};
-
-	speechEnd = () => {
-		// this.setState({ started: false });
-		// this.recognition.abort();
-		// setTimeout(() => {
-		// 	this.recognition.start();
-		// }, 300);
-	};
-
-	toggleRecognition = () => {
-		if (this.state.started) {
-			this.recognition.stop();
-			this.setState({ started: false });
-		} else {
-			this.recognition.start();
-			this.setState({ started: true });
 		}
 	};
 
@@ -139,7 +138,9 @@ export default class Voice extends Component {
 						{this.state.selected ? '' : 'Listening...'}
 					</h1>
 					<div className={style.spacer} />
-					<p className={style.para} ref={this.ref.paragraph} />
+					{this.state.selected && (
+						<p className={style.para} ref={this.ref.paragraph} />
+					)}
 				</div>
 				{/* <img
 					src={this.state.selected && this.state.selected.image}
