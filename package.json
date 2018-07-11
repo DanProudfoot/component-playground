@@ -2,13 +2,20 @@
 	"name": "components-playground",
 	"version": "0.1.0",
 	"private": true,
+	"homepage": ".",
 	"dependencies": {
 		"@danproudfeet/react-scripts": "3.3.8",
+		"classnames": "^2.2.6",
+		"fuzzyset": "^0.0.4",
+		"gh-pages": "^1.2.0",
+		"html2canvas": "^1.0.0-alpha.12",
 		"node-sass": "^4.9.1",
+		"normalize.css": "^8.0.0",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
 		"react-flip-toolkit": "^2.0.9",
-		"react-router-dom": "^4.3.1"
+		"react-router-dom": "^4.3.1",
+		"typed.js": "^2.0.8"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -16,7 +23,8 @@
 		"build": "react-scripts build",
 		"build:analyze": "react-scripts build --analyze",
 		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"deploy": "gh-pages -d build"
 	},
 	"browserslist": {
 		"development": [

@@ -1,53 +1,47 @@
 import React, { Component } from 'react';
-import { Flipper, Flipped } from 'react-flip-toolkit';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import style from './app.module.scss';
+import Voice from 'components/structure/Voice';
+import Panes from 'components/structure/Panes';
+import FlipLink from 'components/structure/FlipLink';
 
-class App extends Component {
-	state = {
-		opened: false,
-		href: null
-	};
+const list = [
+	{ path: 'voice', name: 'Voice', component: Voice },
+	{ path: 'panes', name: 'FLIP panes', component: Panes },
+	{ path: 'flip-link', name: 'FLIP link', component: FlipLink }
+];
 
-	linkClick = e => {
-		e.preventDefault();
-		console.log(e.target.href);
-		this.setState({ href: e.target.href });
-	};
+const basename = window.location.href.includes('localhost')
+	? ''
+	: window.location.pathname;
 
+export default class App extends Component {
 	render() {
 		return (
-			<Flipper flipKey={this.state.opened}>
+			<BrowserRouter basename={basename}>
 				<div className={style.app}>
-					<div className={style.central}>
-						<h1 className={style.heading}>
-							Something really interesting
-						</h1>
-						<p className={style.para}>
-							Some kinda paragraph. It has a link in it here to{' '}
-							<Flipped flipId="link">
-								<a
-									href="http://danproudfoot.co.uk"
-									className={style.warp}
-									onClick={this.linkClick}
-								>
-									My Site
-								</a>
-							</Flipped>
-						</p>
-					</div>
-					<div className={style.external}>
-						<iframe
-							src={this.state.href || 'about:blank'}
-							title="external"
-							frameBorder="0"
-							className={style.iframe}
+					{list.map(item => (
+						<Route
+							key={item.path}
+							path={`/${item.path}`}
+							component={item.component}
 						/>
-					</div>
+					))}
+
+					<Route exact path="/" component={Linkies} />
 				</div>
-			</Flipper>
+			</BrowserRouter>
 		);
 	}
 }
 
-export default App;
+const Linkies = () => (
+	<ul className={style.list}>
+		{list.map(link => (
+			<li key={link.path}>
+				<Link to={link.path}>{link.name}</Link>
+			</li>
+		))}
+	</ul>
+);
