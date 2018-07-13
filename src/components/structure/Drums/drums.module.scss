@@ -1,0 +1,71 @@
+.app {
+	text-align: center;
+	background-color: #fff;
+	min-height: 100vh;
+}
+
+.pads {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	min-height: 80vh;
+	padding: 25px;
+	display: grid;
+	grid-template: repeat(2, 1fr) / repeat(3, 1fr);
+	grid-gap: 50px;
+}
+
+.pad {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.6;
+	transition: all 0.1s ease-out;
+	font-weight: bold;
+
+	&.active {
+		opacity: 1;
+		transform: scale(1.1);
+	}
+
+	&.disabled {
+		transform: scale(0.9);
+		filter: grayscale(1);
+	}
+}
+
+.bass {
+	--color: #fd8700;
+	background-color: var(--color);
+	color: #000;
+}
+
+.snare {
+	--color: #faea0e;
+	background-color: var(--color);
+	color: #000;
+}
+
+.hats {
+	--color: #04fddc;
+	background-color: var(--color);
+	color: #000;
+}
+
+.crash {
+	--color: #00a2ff;
+	background-color: var(--color);
+	color: #000;
+}
+
+.tom {
+	--color: #c80fec;
+	background-color: var(--color);
+	color: #000;
+}
+
+.cowbell {
+	--color: #22ec0f;
+	background-color: var(--color);
+	color: #000;
+}

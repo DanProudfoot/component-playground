@@ -5,11 +5,14 @@ import style from './app.module.scss';
 import Voice from 'components/structure/Voice';
 import Panes from 'components/structure/Panes';
 import FlipLink from 'components/structure/FlipLink';
+import Drums from 'components/structure/Drums';
 
 const list = [
 	{ path: 'voice', name: 'Voice', component: Voice },
 	{ path: 'panes', name: 'FLIP panes', component: Panes },
-	{ path: 'flip-link', name: 'FLIP link', component: FlipLink }
+	{ path: 'flip-link', name: 'FLIP link', component: FlipLink },
+	{ path: 'drums', name: 'Sensor Drum Kit', component: Drums },
+
 ];
 
 const basename = window.location.href.includes('localhost')

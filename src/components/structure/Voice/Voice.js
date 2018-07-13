@@ -80,7 +80,6 @@ export default class Voice extends Component {
 			if (this.title) this.title.destroy();
 			if (this.paragraph) this.paragraph.destroy();
 
-			const optionsTitle = { strings: [selected.text], typeSpeed: 5 };
 			const optionsParagraph = {
 				strings: [selected.info],
 				typeSpeed: 10,
@@ -92,12 +91,18 @@ export default class Voice extends Component {
 					}, 3000);
 				}
 			};
+			const optionsTitle = {
+				strings: [selected.text],
+				typeSpeed: 5,
+				onComplete: () => {
+					this.paragraph = new Typed(
+						this.ref.paragraph.current,
+						optionsParagraph
+					);
+				}
+			};
 
 			this.title = new Typed(this.ref.title.current, optionsTitle);
-			this.paragraph = new Typed(
-				this.ref.paragraph.current,
-				optionsParagraph
-			);
 		}
 	}
 
@@ -135,7 +140,7 @@ export default class Voice extends Component {
 			<>
 				<div className={style.container}>
 					<h1 className={style.title} ref={this.ref.title}>
-						{this.state.selected ? '' : 'Listening...'}
+						{this.state.selected ? '' : ''}
 					</h1>
 					<div className={style.spacer} />
 					{this.state.selected && (
