@@ -12,8 +12,6 @@ import snare from 'assets/samples/snare.wav';
 import smallTom from 'assets/samples/small-tom.wav';
 import bigTom from 'assets/samples/big-tom.wav';
 
-const socket = io(`http://${window.location.hostname}:3050`);
-
 const instruments = [
 	{
 		name: 'Bass',
@@ -66,9 +64,12 @@ const instruments = [
 ];
 
 class App extends Component {
+	socket = io(`http://${window.location.hostname}:3050`);
+
 	state = {
 		pads: instruments,
-		ready: false
+		audioLoaded: false,
+		connected: this.socket.connected
 	};
 
 	getPad = (allPads = this.state.pads, name) =>
@@ -93,6 +94,15 @@ class App extends Component {
 	};
 
 	componentDidMount() {
+		// Manage connection state
+		this.socket.on('connect', () => {
+			this.setState({ connected: true });
+		});
+
+		this.socket.on('disconnect', () => {
+			this.setState({ connected: false });
+		});
+
 		// Create new Sampler using drum samples
 		this.sampler = new Tone.Sampler(
 			{
@@ -104,13 +114,17 @@ class App extends Component {
 				F4: bigTom
 			},
 			() => {
-				this.setState({ ready: true });
+				this.setState({ audioLoaded: true });
 			}
 		).toMaster();
 
-		socket.on('pads', pads => {
+		this.socket.on('pads', pads => {
 			this.incomingPads(pads);
 		});
+	}
+
+	componentWillUnmount() {
+		this.socket.close();
 	}
 
 	incomingPads = incomingPad => {
@@ -126,15 +140,15 @@ class App extends Component {
 		}
 	};
 
-	setEnabled = (pad, state) => {
+	setEnabled = pad => {
 		// Set pad enabled/disabled
 		this.setPads(pad, { enabled: !pad.enabled });
 	};
 
 	render() {
-		const { pads, ready } = this.state;
+		const { pads, audioLoaded, connected } = this.state;
 
-		if (ready)
+		if (audioLoaded && connected)
 			return (
 				<div className={style.app}>
 					<ul className={style.pads}>
@@ -145,7 +159,7 @@ class App extends Component {
 									[style.disabled]: !inst.enabled,
 									[style.active]: inst.state && inst.enabled
 								})}
-								onClick={e => this.setEnabled(inst)}
+								onClick={() => this.setEnabled(inst)}
 							>
 								<span key={inst.name} className={style.label}>
 									{inst.name}
@@ -155,6 +169,10 @@ class App extends Component {
 					</ul>
 				</div>
 			);
+
+		if (!connected) {
+			return <div>Cannot connect to instrument server</div>;
+		}
 
 		return null;
 	}

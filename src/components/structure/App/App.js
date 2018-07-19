@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
+import loadable from 'loadable-components';
 
+import Loading from 'components/ui/Loading';
 import style from './app.module.scss';
-import Voice from 'components/structure/Voice';
-import Panes from 'components/structure/Panes';
-import FlipLink from 'components/structure/FlipLink';
-import Drums from 'components/structure/Drums';
+
+const loadingOptions = { LoadingComponent: Loading };
 
 const list = [
-	{ path: 'voice', name: 'Voice', component: Voice },
-	{ path: 'panes', name: 'FLIP panes', component: Panes },
-	{ path: 'flip-link', name: 'FLIP link', component: FlipLink },
-	{ path: 'drums', name: 'Sensor Drum Kit', component: Drums },
-
+	{
+		path: 'voice',
+		name: 'Voice',
+		component: loadable(() => import('components/structure/Voice'), {
+			...loadingOptions
+		}),
+		disabled: false
+	},
+	{
+		path: 'panes',
+		name: 'FLIP panes',
+		component: loadable(() => import('components/structure/Panes'), {
+			...loadingOptions
+		}),
+		disabled: true
+	},
+	{
+		path: 'flip-link',
+		name: 'FLIP link',
+		component: loadable(() => import('components/structure/FlipLink'), {
+			...loadingOptions
+		}),
+		disabled: true
+	},
+	{
+		path: 'drums',
+		name: 'Sensor Drum Kit',
+		component: loadable(() => import('components/structure/Drums'), {
+			...loadingOptions
+		}),
+		disabled: false
+	}
 ];
 
 const basename = window.location.href.includes('localhost')
@@ -22,8 +49,8 @@ const basename = window.location.href.includes('localhost')
 export default class App extends Component {
 	render() {
 		return (
-			<HashRouter hashType="noslash" basename={basename}>
-				<div className={style.app}>
+			<BrowserRouter>
+				<main className={style.app}>
 					{list.map(item => (
 						<Route
 							key={item.path}
@@ -32,19 +59,25 @@ export default class App extends Component {
 						/>
 					))}
 
-					<Route exact path="/" component={Linkies} />
-				</div>
-			</HashRouter>
+					<Route exact path="/" component={Index} />
+				</main>
+			</BrowserRouter>
 		);
 	}
 }
 
-const Linkies = () => (
-	<ul className={style.list}>
-		{list.map(link => (
-			<li key={link.path}>
-				<Link to={link.path}>{link.name}</Link>
-			</li>
-		))}
-	</ul>
+const Index = () => (
+	<section className={style.index}>
+		<h1 className={style.title}>Components</h1>
+		<ul className={style.list}>
+			{list.map(
+				link =>
+					!link.disabled && (
+						<li key={link.path}>
+							<Link to={link.path}>{link.name}</Link>
+						</li>
+					)
+			)}
+		</ul>
+	</section>
 );

@@ -2,22 +2,22 @@
 	"name": "components-playground",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": ".",
 	"dependencies": {
-		"@danproudfeet/react-scripts": "3.3.8",
+		"@danproudfeet/react-scripts": "3.5.0",
 		"classnames": "^2.2.6",
 		"fuzzyset": "^0.0.4",
 		"gh-pages": "^1.2.0",
 		"html2canvas": "^1.0.0-alpha.12",
-		"node-sass": "^4.9.1",
+		"loadable-components": "^2.2.2",
+		"node-sass": "^4.9.2",
 		"normalize.css": "^8.0.0",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
-		"react-flip-toolkit": "^2.0.9",
+		"react-flip-toolkit": "^3.0.5",
 		"react-router-dom": "^4.3.1",
-		"typed.js": "^2.0.8",
 		"socket.io": "^2.1.1",
-		"tone": "^0.12.80"
+		"tone": "^0.12.80",
+		"typed.js": "^2.0.8"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -26,7 +26,8 @@
 		"build:analyze": "react-scripts build --analyze",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
-		"deploy": "gh-pages -d build"
+		"deploy": "gh-pages -d build",
+		"postbuild": "react-snap"
 	},
 	"browserslist": {
 		"development": [
@@ -39,5 +40,11 @@
 			"not op_mini all",
 			"ie 11"
 		]
+	},
+	"devDependencies": {
+		"react-snap": "^1.15.0"
+	},
+	"reactSnap": {
+		"inlineCss": true
 	}
 }
